@@ -25,7 +25,12 @@ Then, you'll have to build the test module:
 
     $ csc -t -s jni/test.scm
 
-This should produce `test.c`. Now try `ndk-build` from the project root. You should get `libchicken.so` and `csi` under `libs/`. Building Chicken takes a long time!
+This should produce `test.c`. Now try `ndk-build` from the project root. You should get `libchicken.so` and `csi` under `libs/`. Building Chicken takes a long time! Now you can push the files under `./libs` to a writeable place on your phone and start `csi`:
+
+$ adb push libs/armeabi/ /cache/
+    $ adb shell
+    # cd /cache/
+    # LD_LIBRARY_PATH=. ./csi
 
 ## Todos
 
