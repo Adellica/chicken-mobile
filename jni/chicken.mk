@@ -5,6 +5,7 @@ LOCAL_PATH := $(CHICKEN_HOME)
 # all dependencies of chicken will have the exports applied
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 LOCAL_EXPORT_CFLAGS := -DC_INSTALL_PREFIX=\"/cache/\"
+LOCAL_CFLAGS := -DHAVE_DLFCN_H -DPIC -DC_ENABLE_PTABLES -DC_BUILDING_LIBCHICKEN
 
 LOCAL_MODULE    := chicken
 LOCAL_SRC_FILES := runtime.c \
