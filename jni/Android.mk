@@ -7,5 +7,5 @@ In CHICKEN_HOME, you should find runtime.c, eval.scm, chicken.h etc)
 endif
 
 include ./jni/chicken.mk
-include ./jni/components.mk
+include ./jni/csi.mk
 
