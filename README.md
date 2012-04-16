@@ -19,18 +19,34 @@ You'll have to build Chicken so it's ready with its C source files in place. Thi
 
 ## Building 
 
-For now, you'll have to modify `CHICKEN_HOME` in `jni/Android.mk` to point to your Chicken sources.
+Provide `CHICKEN_HOME`, where `runtime.c`, `chicken.h` and `eval.scm` etc live and start the NDK-build toolchain:
 
-Then, you'll have to build the test module:
+    $ CHICKEN_HOME=/your/chicken-core/folder/ ndk-build
 
-    $ csc -t -s jni/test.scm
+You should get `libchicken.so` and `csi` under `libs/`. Building Chicken takes a long time! You should see two files under libs:
 
-This should produce `test.c`. Now try `ndk-build` from the project root. You should get `libchicken.so` and `csi` under `libs/`. Building Chicken takes a long time! Now you can push the files under `./libs` to a writeable place on your phone and start `csi`:
+* libs/armeabi/libchicken.so
+* libs/armeabi/csi
+
+To run `csi` on your device/emulator, push the files under `./libs` to a writeable place on your phone and launch:
 
     $ adb push libs/armeabi/ /cache/
     $ adb shell
     # cd /cache/
     # LD_LIBRARY_PATH=. ./csi
+
+## Using in another project
+
+This is a TODO, but here are some hints:
+
+    include $(CLEAR_VARS)
+    LOCAL_MODULE := chicken
+    LOCAL_PATH := $(ANDROID_CHICKEN_HOME)
+    LOCAL_SRC_FILES := libs/armeabi/libchicken.so
+    LOCAL_EXPORT_C_INCLUDES := $(CHICKEN_HOME)
+    LOCAL_EXPORT_CFLAGS := -DC_INSTALL_PREFIX=\"/cache/\"
+    include $(PREBUILT_SHARED_LIBRARY)
+
 
 ## Todos
 
