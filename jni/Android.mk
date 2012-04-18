@@ -6,6 +6,6 @@ CHICKEN_HOME=/path/to/your/chicken ndk-build. \
 In CHICKEN_HOME, you should find runtime.c, eval.scm, chicken.h etc)
 endif
 
-include ./jni/chicken.mk
-include ./jni/csi.mk
+include chicken.mk
+include csi.mk
 
