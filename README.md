@@ -1,3 +1,4 @@
+
   [Chicken Scheme]: http://call-cc.org
   [Android NDK]: http://developer.android.com/sdk/ndk/index.html
 
@@ -9,26 +10,25 @@ This template of Makefiles should let you:
 * Build shared libs from Scheme sources files (`libtest.so`) that can be used with `(load "libtest.so")`
 * Build executables from Scheme source files
 
+Requirements:
 
-You will need:
-
-* The [Android NDK] (I'm on `android-ndk-r7`)
-* [Chicken Scheme] (I'm on 4.7.0.4) 
-
-You'll have to build Chicken so it's ready with its C source files in place. This is your `CHICKEN_HOME` directory (where e.g. runtime.c and chicken.h are).
+* [Chicken Scheme] \(I'm on 4.7.0.4) 
+* [Android NDK] \(I'm on `android-ndk-r7`)
 
 ## Building 
+
+You'll have to build Chicken so it's ready with its C source files in place. If you have already built it for your desktop, this will suffice. 
 
 Provide `CHICKEN_HOME`, where `runtime.c`, `chicken.h` and `eval.scm` etc live and start the NDK-build toolchain:
 
     $ CHICKEN_HOME=/your/chicken-core/folder/ ndk-build
 
-You should get `libchicken.so` and `csi` under `libs/`. Building Chicken takes a long time! You should see two files under libs:
+This takes a long time! When done, you should see two files under `./libs`:
 
-* libs/armeabi/libchicken.so
-* libs/armeabi/csi
+* armeabi/libchicken.so
+* armeabi/csi
 
-To run `csi` on your device/emulator, push the files under `./libs` to a writeable place on your phone and launch:
+To run `csi` on your device/emulator, push the binaries to a writeable place on your phone and launch:
 
     $ adb push libs/armeabi/ /cache/
     $ adb shell
@@ -55,5 +55,3 @@ We're early in development! Stay tuned for a more convenient tool:
 * Generate project-specific makefiles
  * CHICKEN_HOME can automatically be handled
 * Include makefiles for Chicken Egg dependencies
-
-
