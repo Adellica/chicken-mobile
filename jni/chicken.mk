@@ -1,11 +1,8 @@
 include $(CLEAR_VARS)
 
 LOCAL_PATH := $(CHICKEN_HOME)
-# export the include path (for chicken.h) and preprocessor vars.
-# all dependencies of chicken will have the exports applied
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
-LOCAL_EXPORT_CFLAGS := -DC_INSTALL_PREFIX=\"/cache/\"
 LOCAL_CFLAGS := -DHAVE_DLFCN_H -DPIC -DC_ENABLE_PTABLES -DC_BUILDING_LIBCHICKEN
+include chicken-exports.mk
 
 LOCAL_MODULE    := chicken
 LOCAL_SRC_FILES := runtime.c \
