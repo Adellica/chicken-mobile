@@ -18,6 +18,11 @@ LOCAL_SRC_FILES := runtime.c \
 	srfi-1.c \
 	srfi-18.c \
 	build-version.c \
-	modules.c
+	modules.c \
+	lolevel.c srfi-69.c \
+	irregex.c \
+	files.c \
+	srfi-13.c srfi-14.c \
+	scheme.import.c
 
 include $(BUILD_SHARED_LIBRARY)
