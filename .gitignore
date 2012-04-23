@@ -1,3 +1,14 @@
 
 /obj/
 /libs/
+/samples/chicken-android-jni/bin/
+/samples/chicken-android-jni/gen/
+/samples/chicken-android-jni/obj/
+/samples/chicken-android-jni/libs/
+/samples/chicken-android-jni/local.properties
+/samples/chicken-android-jni/.classpath
+/samples/chicken-android-jni/.project
+/samples/chicken-android-jni/.settings/
+/samples/chicken-android-jni/jni/jni-sample.c
+/.chicken-home.mk
+/jni/find-extension.c
