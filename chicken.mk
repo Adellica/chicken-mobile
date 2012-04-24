@@ -13,6 +13,9 @@ LOCAL_C_INCLUDES := $(CHICKEN_HOME)
 LOCAL_CFLAGS := -DHAVE_DLFCN_H -DPIC -DC_ENABLE_PTABLES -DC_BUILDING_LIBCHICKEN -DC_SHARED
 include $(LOCAL_HOME)/chicken-exports.mk
 
+// TODO: cleanup this part of build-process
+$(shell csc -t jni/find-extension.scm)
+
 LOCAL_MODULE    := chicken
 LOCAL_SRC_FILES := $(CHICKEN_HOME)/runtime.c \
 	$(CHICKEN_HOME)/library.c \
