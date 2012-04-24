@@ -33,7 +33,7 @@ LOCAL_SRC_FILES := $(CHICKEN_HOME)/runtime.c \
 	$(CHICKEN_HOME)/files.c \
 	$(CHICKEN_HOME)/srfi-13.c $(CHICKEN_HOME)/srfi-14.c \
 	$(CHICKEN_HOME)/scheme.import.c \
-	$(LOCAL_HOME)/jni/find-extension.c
+	$(shell pwd)/$(LOCAL_HOME)/jni/find-extension.c
 
 include $(BUILD_SHARED_LIBRARY)
 
