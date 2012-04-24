@@ -1,5 +1,6 @@
   [Chicken Scheme]: http://call-cc.org
   [Android NDK]: http://developer.android.com/sdk/ndk/index.html
+  [Changing LD_LIBRARY_PATH]: http://groups.google.com/group/android-ndk/browse_thread/thread/da2cb8cdeca854a5/77fb7dd33bb376f7
 
 # [Chicken Scheme] on Android
 
@@ -21,7 +22,7 @@ You'll have to build Chicken so it's ready with its C source files in place. If 
 
 Provide `CHICKEN_HOME`, where `runtime.c`, `chicken.h` and `eval.scm` etc live and start the NDK-build toolchain:
 
-    $ CHICKEN_HOME=/your/chicken-core/folder/ ndk-build
+    $ CHICKEN_HOME=/your/chicken-core/folder/ ndk-build # -j 4 for the brave
 
 This takes a long time! When done, you should see `libs/armeabi/libchicken.so` and `libs/armeabi/csi`. 
 To run `csi` on your device/emulator, push the binaries to a writeable place and launch:
@@ -33,21 +34,33 @@ To run `csi` on your device/emulator, push the binaries to a writeable place and
 
 ## Using in another project
 
-Compile your Scheme sources to C with `csc -t` and use the `chicken` module provided by this project. 
-Note that you don't need an Android version of `csc` since it will only compile to C.
-By using the prebuilt version, you don't have to recompile chicken for every Chicken Android project. Here's
-an example of an `Android.mk`:
+1. Compile your Scheme sources to C with `csc -t`  
+   *Note*: you don't need an Android version of `csc` since it will only compile to C.
+1. Import the `chicken` module with 
+   `$(call import-add-path,$(ANDROID_CHICKEN_HOME)/modules-prebuilt)` and
+   `$(call import-module,chicken)`
+1. Add this `chicken` module as a dependency of your project: `LOCAL_SHARED_LIBRARIES += chicken`
 
-    LOCAL_PATH := $(call my-dir)
-    include $(CLEAR_VARS)
-    LOCAL_MODULE := jni-sample
-    $(shell csc -t jni/jni-sample.scm)
-    LOCAL_SRC_FILES := jni-sample.c
-    LOCAL_SHARED_LIBRARIES := chicken
-    include $(BUILD_SHARED_LIBRARY)
-    $(call import-add-path,$(CHICKEN_ANDROID_HOME)/modules-prebuilt)
-    $(call import-module,chicken)
+By using the prebuilt version, you don't have to recompile chicken for every Chicken Android project. 
+There's a small sample project in the `samples` directory that can give some guidelines. 
 
+    $ cd samples/chicken-android-jni/
+    $ ndk-build
+    $ android update project -n SampleJni -p . -t android-10
+    $ ant debug
+    $ adb install -r bin/SampleJni-debug.apk
+
+This should build the sameple app and install it on your device or emulator.
+
+## Notes / troubleshoot
+
+* When linking dynamically at the build-stage, 
+like chicken is linked against the jni-sample, you need to manually load the dynamically load the dependency
+first with `System.loadLibrary(...)`. See [Changing LD_LIBRARY_PATH].
+
+* Don't forget to `CHICKEN_run(C_toplevel)` somewhere before your first chicken-call.
+
+* Don't forget to `(return-to-host)` or your app will exit after `CHICKEN_run`.
 
 ## Todos
 
