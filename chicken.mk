@@ -2,7 +2,6 @@
 # we must make path of current makefile absolute
 # because of the special case of LOCAL_PATH being /
 LOCAL_HOME := $(dir $(lastword $(MAKEFILE_LIST)))
-$(info local home $(LOCAL_HOME))
 
 include $(CLEAR_VARS)
 
