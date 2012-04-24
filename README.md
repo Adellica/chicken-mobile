@@ -3,7 +3,7 @@
 
 # [Chicken Scheme] on Android
 
-This template of Makefiles that:
+This is a set of makefiles for the NDK that:
 
 * Builds [Chicken Scheme] as a dynamic library using just `ndk-build`
 * Builds `csi` for debugging/testing
