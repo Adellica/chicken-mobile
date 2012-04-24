@@ -5,9 +5,10 @@
 
 This template of Makefiles that:
 
-* Builds [Chicken Scheme] as a dynamic library using just ndk-build (`libchicken.so`)
+* Builds [Chicken Scheme] as a dynamic library using just `ndk-build`
 * Builds `csi` for debugging/testing
-* Helps building libs from Scheme sources files that can be loaded at runtime `(require 'mylib)`
+* Helps building libs from Scheme sources files that can be included in your app
+* Helps with runtime loading of compiled libraries, e.g. `(require 'mylib)`
 
 Requirements:
 
