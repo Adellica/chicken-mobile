@@ -70,6 +70,18 @@ If you're use chicken-android as an imported module and see this:
     
 Try rebuilding chicken-home where you specify CHICKEN_HOME like shown above. This should automatically store your provided value in .chicken-home.mk for future use.
 
+### error while loading shared libraries: libz.so.1
+
+If you see `../as: error while loading shared libraries: libz.so.1`, 
+it could be because the prebuilt `as` binary 
+in the Android toolchain is linked against the 32-bit version of `libz`. 
+You can chase these kind of problems with:
+
+    $ ldd <ndk>/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-as
+    libz.so.1 => not found
+
+Try the equivalent of `sudo pacman -S lib32-zlib` for your distro. 
+
 ## Todos
 
 We're early in development! Stay tuned for a more convenient tool:
