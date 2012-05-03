@@ -62,6 +62,14 @@ first with `System.loadLibrary(...)`. See [Changing LD_LIBRARY_PATH].
 
 * Don't forget to `(return-to-host)` or your app will exit after `CHICKEN_run`.
 
+### Missing .chicken-home.mk
+
+If you're use chicken-android as an imported module and see this:
+
+    .chicken-home.mk: No such file or directory
+    
+Try rebuilding chicken-home where you specify CHICKEN_HOME like shown above. This should automatically store your provided value in .chicken-home.mk for future use.
+
 ## Todos
 
 We're early in development! Stay tuned for a more convenient tool:
