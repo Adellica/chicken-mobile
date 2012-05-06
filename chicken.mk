@@ -29,8 +29,6 @@ LOCAL_SRC_FILES := $(CHICKEN_HOME)/runtime.c \
 	$(CHICKEN_HOME)/chicken-syntax.c \
 	$(CHICKEN_HOME)/srfi-1.c \
 	$(CHICKEN_HOME)/srfi-18.c \
-	$(CHICKEN_HOME)/build-version.c \
-	$(CHICKEN_HOME)/modules.c \
 	$(CHICKEN_HOME)/lolevel.c $(CHICKEN_HOME)/srfi-69.c \
 	$(CHICKEN_HOME)/irregex.c \
 	$(CHICKEN_HOME)/files.c \
