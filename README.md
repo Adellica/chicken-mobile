@@ -84,8 +84,7 @@ Try the equivalent of `sudo pacman -S lib32-zlib` for your distro.
 
 ## Todos
 
-We're early in development! Stay tuned for a more convenient tool:
+Patches and feedback is always welcome! Some things that could be useful:
 
-* Generate makefiles/modules based on Egg desctiptions
-* Include makefiles for Chicken Egg dependencies
 * Abort build if `csc` fails
+* Generate Android makefile snippets for easier embedding
