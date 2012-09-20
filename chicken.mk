@@ -10,7 +10,7 @@ include $(CLEAR_VARS)
 LOCAL_PATH := /
 
 LOCAL_C_INCLUDES := $(CHICKEN_HOME)
-LOCAL_CFLAGS := -DHAVE_DLFCN_H -DPIC -DC_ENABLE_PTABLES -DC_BUILDING_LIBCHICKEN -DC_SHARED
+LOCAL_CFLAGS := -DHAVE_DLFCN_H -DPIC -DC_ENABLE_PTABLES -DC_BUILDING_LIBCHICKEN -DC_SHARED -DC_INSTALL_LIB_NAME=\"chicken\"
 include $(LOCAL_HOME)/chicken-exports.mk
 
 // TODO: cleanup this part of build-process
@@ -34,7 +34,8 @@ LOCAL_SRC_FILES := $(CHICKEN_HOME)/runtime.c \
 	$(CHICKEN_HOME)/irregex.c \
 	$(CHICKEN_HOME)/files.c \
 	$(CHICKEN_HOME)/srfi-13.c $(CHICKEN_HOME)/srfi-14.c \
-	$(CHICKEN_HOME)/scheme.import.c \
+	$(CHICKEN_HOME)/build-version.c \
+	$(CHICKEN_HOME)/modules.c \
 	$(shell pwd)/$(LOCAL_HOME)/jni/find-extension.c
 
 include $(BUILD_SHARED_LIBRARY)
