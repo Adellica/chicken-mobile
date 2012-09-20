@@ -13,7 +13,7 @@ This is a set of makefiles for the NDK that:
 
 Requirements:
 
-* [Chicken Scheme] \(I'm on 4.7.0.4) 
+* [Chicken Scheme] \(should work on 4.7 and 4.8) 
 * [Android NDK] \(I'm on `android-ndk-r7`)
 
 ## Building 
