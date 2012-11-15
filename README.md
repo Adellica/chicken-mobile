@@ -11,6 +11,9 @@ This is a set of makefiles for the NDK that:
 * Helps building libs from Scheme sources files that can be included in your app
 * Helps with runtime loading of compiled libraries, e.g. `(require 'mylib)`
 
+Note that this is not a full Android app, but an NDK module that your own Android app's native modules 
+can depend on with `LOCAL_SHARED_LIBRARIES := chicken`.
+
 Requirements:
 
 * [Chicken Scheme] \(should work on 4.7 and 4.8) 
