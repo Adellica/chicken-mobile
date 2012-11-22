@@ -16,12 +16,51 @@ exec csi -s "$0" "$@"
                        (dependencies (modules bind coops
                                               chickmunk))))
 
+;; (plist-ref '(key1: a key2: b) key2:)
+;; (plist-ref '(key1: a key2: b) false:)
+;; (plist-ref '(key1: a key2: b fiasco:) key1:)
+;; (plist-ref 'error key0:)
+(define (plist-ref plist key)
+  (assert (= 0 (remainder (length plist) 2)) "odd number of elements in plist")
+  (let loop ([plist plist])
+    (if (null? plist)
+        #f
+        (if (eq? key (car plist))
+            (cadr plist)
+            (loop (cddr plist))))))
+
+;; (module-name key1: value1 key2: value2)
+(define (modspec-ref module key)
+  (if (list? module)
+      (plist-ref (cdr module) key)
+      #f))
+
+;; (module-name '(bind 1 2 3))
+;; (module-name 'bind)
+(define (module-name module)
+  (if (list? module) (car module) module))
+
+;; (module-source-filename '(coops file: coops-module))
+;; (module-source-filename '(cplusplus-object bind))
+;; (module-source-filename 'bind)
+(define (module-source-filename module)
+  (source-filename (or (modspec-ref module file:)
+                       (module-name module))))
+
+;; (module-dir '(cplusplus-object dir: bind))
+;; (module-dir '(cplusplus-object file: trick))
+;; (module-dir 'cplusplus-object)
+(define (module-dir module)
+  (conc (or (modspec-ref module dir:) (module-name module))))
+
+;; (module-source-path '(coops coops-module))
+;; (module-source-path 'bind)
+(define (module-source-path module)
+  (make-pathname (module-dir module) (module-source-filename module)))
 
 ;; obs: assuming module name always = module.c file (from compile step)
 (define (mk-module module)
-  (let ([module (if (list? module)
-                    (car module)
-                    module)])
+  (let ([module (module-name module)])
     `(,(conc"# -------------------- " module)
       "# (shared library)"
       "include $(CLEAR_VARS)"
@@ -39,16 +78,16 @@ exec csi -s "$0" "$@"
       "include $(BUILD_SHARED_LIBRARY)"
       "")))
 
-;; ((csc-thunk 'test-mod '("a.scm" "b.scm")))
-
-;; egg is `(egg-name sources) or just egg-name-source
 (define (mk-modules modules)
   (assert (list? modules))
   (map mk-module modules))
 
+;; spec: list-of module-spec
+;; module-spec: module-name | (module-name dir: module-dir file: module-file)
+;; module-file and module-dir defaults to module-name
 (define modules `(bind
-                  cplusplus-object
-                  (coops coops-module) ;; (module-name source-file)
+                  (cplusplus-object dir: bind)
+                  (coops file: coops-module)
                   matchable
                   record-variants))
 
