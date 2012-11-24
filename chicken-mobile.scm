@@ -68,10 +68,10 @@ exec csi -s "$0" "$@"
 ;; (./file 'bind "dir")
 ;; (./file '(coops file: coops-module) "dir")
 (define (./file m s)
-  (make-pathname s (module-file
-                    ;; get module filename/default
-                    (conc (or (modspec-ref m file:)
-                              (module-name m))))))
+  (make-pathname s 
+                 ;; get module filename/default
+                 (conc (or (modspec-ref m file:)
+                           (module-name m)))))
 
 ;; shortcut for (module-path ... ./file module)
 ;; (module-file target/ module/ '(coops file: coops-module-file dir: coops-module-dir))
