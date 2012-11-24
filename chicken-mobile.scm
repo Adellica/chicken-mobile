@@ -21,6 +21,7 @@ exec csi -s "$0" "$@"
 
 
 (define chicken-mobile-home (make-parameter "~/.chicken-mobile/"))
+(define chicken-mobile-eggs (make-parameter "~/.chicken-mobile/eggs/"))
 
 ;; (plist-ref '(key1: a key2: b) key2:)
 ;; (plist-ref '(key1: a key2: b) false:)
@@ -97,16 +98,30 @@ exec csi -s "$0" "$@"
 (define (target/ m s)
   (make-pathname ".chicken-mobile/build/" s))
 
-;; (source/ '(cplusplus-object dir: bind) "")
-(define (source/ m s)
-  (find (lambda (x) (if (file-exists? x) #t (begin (print "; not found: " x) #f)))
-        (map (lambda (dir)
-               (make-pathname dir (file module/ .scm m)))
-             ;; list of directories to search for module:
-             (list (dir m)
-                   (make-pathname (chicken-mobile-home) "eggs")))))
+(define (../ m s)
+  (make-pathname "../" s))
 
+;; (file (make-searcher/ (lambda (m s) '("a" "b" "c")) (lambda (f search-paths) 'gone!)) 'bind)
+(define (make-searcher/ proc-search-paths
+                        proc-not-found
+                        #!optional (tried
+                                    (lambda (s p) (print "; not found: " p))))
+  (lambda (m s) 
+    (let* ([sp (proc-search-paths m s)]
+           [found
+            (find (lambda (search-path)
+                    (let ([pathname (make-pathname search-path s)])
+                      (if (file-exists? pathname)
+                          #t
+                          (begin (tried s pathname) #f))))
+                  sp)])
+      (or found (proc-not-found s sp)))))
 
+;; (search/ '(cplusplus-object dir: bind) "missing-file")
+(define search/ (make-searcher/ (lambda (m s)
+                                  (list (dir target/ module/ m)
+                                        (chicken-mobile-eggs)))
+                                (lambda (f search-paths) #f)))
 
 (define (mk-module-body module-name . source-files)
   `("include $(CLEAR_VARS)"
