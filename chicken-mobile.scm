@@ -46,12 +46,12 @@ exec csi -s "$0" "$@"
 (define (module-name module)
   (if (list? module) (car module) module))
 
-;; (module-source-filename '(coops file: coops-module))
-;; (module-source-filename '(cplusplus-object bind))
-;; (module-source-filename 'bind)
-(define (module-source-filename module)
-  (source-filename (or (modspec-ref module file:)
-                       (module-name module))))
+;; return source/target file of module
+;; always a string
+(define (module-file module)
+  (conc (or (modspec-ref module file:)
+            (module-name module))))
+
 
 ;; (module-dir '(cplusplus-object dir: bind))
 ;; (module-dir '(cplusplus-object file: trick))
@@ -59,12 +59,32 @@ exec csi -s "$0" "$@"
 (define (module-dir module)
   (conc (or (modspec-ref module dir:) (module-name module))))
 
-;; (module-source-path '(coops coops-module))
-;; (module-source-path 'bind)
-(define (module-source-path module)
-  (make-pathname (module-dir module) (module-source-filename module)))
+(define (.scm module s)
+  (source-filename s))
 
-;; obs: assuming module name always = module.c file (from compile step)
+(define (.c m s)
+  (c-source-filename s))
+
+(define (.import m s)
+  (import-filename s))
+
+(define (module/ m s)
+  (make-pathname (module-dir m) s))
+
+(define (target/ m s)
+  (make-pathname ".chicken-mobile/build/" s))
+
+;; (p target/ dir/ '(coops file: coops-module-file dir: coops-module-dir))
+;; (p target/ dir/ .c .import '(cplusplus-object dir: bind))
+(define (p . procs-module)
+  (let ([module (last procs-module)])
+    (assert (or (and (list? module) (symbol? (car module))) (symbol? module)))
+    (let loop ([procs (reverse (drop-right procs-module 1))]
+               [s (module-file module)])
+      (if (null? procs)
+          s
+          (loop (cdr procs) ((car procs) module s))))))
+
 (define (mk-module-body module-name . source-files)
   `("include $(CLEAR_VARS)"
     ,(conc "LOCAL_MODULE := " module-name)
@@ -80,9 +100,9 @@ exec csi -s "$0" "$@"
   (let ([module (module-name module)])
     `(,(conc"# -------------------- " module)
       "# (shared library)"
-      ,(mk-module-body (module-name module) (module-c-filename module))
+      ,(mk-module-body (module-name module) (p .c module))
       "# (shared import library) "
-      ,(mk-module-body (module-name module) (module-c-filename module 'import))
+      ,(mk-module-body (module-name module) (p .c .import module))
       "")))
 
 
