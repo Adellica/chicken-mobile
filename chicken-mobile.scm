@@ -68,7 +68,7 @@ exec csi -s "$0" "$@"
 ;; (./file 'bind "dir")
 ;; (./file '(coops file: coops-module) "dir")
 (define (./file m s)
-  (make-pathname s 
+  (make-pathname s
                  ;; get module filename/default
                  (conc (or (modspec-ref m file:)
                            (module-name m)))))
@@ -189,7 +189,7 @@ exec csi -s "$0" "$@"
   ;; compile to .c files
   (map
    (lambda (module)
-     `(  ,(module-path target/ module/ .c ./name module)     ;; build target
+     `(  ,(module-path target/ module/ .c ./name module) ;; build target
          (,(module-file search/ module/ .scm module)) ;; dependencies
          ,(csc-thunk module (module-compile-args module)))) ;; how-to-build target
    modules)
