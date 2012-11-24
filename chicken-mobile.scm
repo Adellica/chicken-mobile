@@ -22,10 +22,6 @@ exec csi -s "$0" "$@"
 
 (define chicken-mobile-home (make-parameter "~/.chicken-mobile/"))
 
-`(project `(cocoscheme 0.9
-                       (dependencies (modules bind coops
-                                              chickmunk))))
-
 ;; (plist-ref '(key1: a key2: b) key2:)
 ;; (plist-ref '(key1: a key2: b) false:)
 ;; (plist-ref '(key1: a key2: b fiasco:) key1:)
