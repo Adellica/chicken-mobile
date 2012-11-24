@@ -65,23 +65,24 @@ exec csi -s "$0" "$@"
   (make-pathname (module-dir module) (module-source-filename module)))
 
 ;; obs: assuming module name always = module.c file (from compile step)
+(define (mk-module-body module-name . source-files)
+  `("include $(CLEAR_VARS)"
+    ,(conc "LOCAL_MODULE := " module-name)
+    ,(apply conc (cons "LOCAL_SRC_FILES := " source-files))
+    "LOCAL_SHARED_LIBRARIES := chicken"
+    "LOCAL_CFLAGS := -DC_SHARED"
+    "include $(BUILD_SHARED_LIBRARY)"))
+
+;; obs: assuming module name always = module.c file (from compile
+;; step)
+;; (print (string-join (flatten (map mk-module modules)) "\n"))
 (define (mk-module module)
   (let ([module (module-name module)])
     `(,(conc"# -------------------- " module)
       "# (shared library)"
-      "include $(CLEAR_VARS)"
-      ,(conc "LOCAL_MODULE := " module)
-      ,(conc "LOCAL_SRC_FILES := " (c-source-filename module))
-      "LOCAL_SHARED_LIBRARIES := chicken"
-      "LOCAL_CFLAGS := -DC_SHARED"
-      "include $(BUILD_SHARED_LIBRARY)"
+      ,(mk-module-body (module-name module) (module-c-filename module))
       "# (shared import library) "
-      "include $(CLEAR_VARS)"
-      ,(conc "LOCAL_MODULE := " (import-filename module))
-      ,(conc "LOCAL_SRC_FILES := " (c-source-filename (import-filename module)))
-      "LOCAL_SHARED_LIBRARIES := chicken"
-      "LOCAL_CFLAGS := -DC_SHARED"
-      "include $(BUILD_SHARED_LIBRARY)"
+      ,(mk-module-body (module-name module) (module-c-filename module 'import))
       "")))
 
 
