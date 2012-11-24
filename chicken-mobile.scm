@@ -68,9 +68,9 @@ exec csi -s "$0" "$@"
                                      (module-name module)))
                            procs-module))))
 
-;; (module-dir target/ module/ 'bind)
+;; (module-path target/ module/ 'bind)
 ;; (module-file 'bind)
-(define (module-dir . procs-module)
+(define (module-path . procs-module)
   (apply construct-path (cons "" procs-module)))
 
 (define (.scm module s)
@@ -110,7 +110,7 @@ exec csi -s "$0" "$@"
 
 ;; (search/ '(cplusplus-object dir: bind) "missing-file")
 (define search/ (make-searcher/ (lambda (m s)
-                                  (list (module-dir target/ module/ m)
+                                  (list (module-path target/ module/ m)
                                         (chicken-mobile-eggs)))
                                 (lambda (f search-paths) #f)))
 
