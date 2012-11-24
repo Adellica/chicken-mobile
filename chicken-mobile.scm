@@ -132,8 +132,8 @@ exec csi -s "$0" "$@"
     "include $(BUILD_SHARED_LIBRARY)"))
 
 ;; obs: assuming module name always = module.c file (from compile
-;; step)
-;; (print (string-join (flatten (map mk-module modules)) "\n"))
+;; step) -----
+;;; (print (string-join (flatten (map mk-module modules)) "\n"))
 (define (mk-module module)
   (let ([module (module-name module)])
     `(,(conc"# -------------------- " module)
@@ -143,9 +143,7 @@ exec csi -s "$0" "$@"
       ,(mk-module-body (module-name module) (file .c .import module))
       "")))
 
-
-
-(print* "writing Chickem.mk ...")
+(print* "writing Chickem.mk ... ")
 (with-output-to-file "Chicken.mk"
   (lambda ()
     (print (string-join
