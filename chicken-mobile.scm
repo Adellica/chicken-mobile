@@ -3,6 +3,16 @@
 exec csi -s "$0" "$@"
 |#
 
+
+;; spec: list-of module-spec
+;; module-spec: module-name | (module-name dir: module-dir file: module-file)
+;; module-file and module-dir defaults to module-name
+(define modules `(bind
+                  (cplusplus-object dir: bind)
+                  (coops file: coops-module)
+                  matchable
+                  record-variants))
+
 (use setup-api setup-helper-mod posix)
 
 ;; conventions from setup-api
@@ -79,14 +89,6 @@ exec csi -s "$0" "$@"
       "")))
 
 
-;; spec: list-of module-spec
-;; module-spec: module-name | (module-name dir: module-dir file: module-file)
-;; module-file and module-dir defaults to module-name
-(define modules `(bind
-                  (cplusplus-object dir: bind)
-                  (coops file: coops-module)
-                  matchable
-                  record-variants))
 
 (print* "writing Chickem.mk ...")
 (with-output-to-file "Chicken.mk"
