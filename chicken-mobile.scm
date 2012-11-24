@@ -47,6 +47,8 @@ exec csi -s "$0" "$@"
 (define (module-name module)
   (if (list? module) (car module) module))
 
+;; =============================== path constructs
+
 ;; construct pathname with a list of procs
 ;; (construct-path "xXx" target/ module/ '(coops file: coops-module))
 (define (construct-path initial-path . procs-module)
@@ -71,6 +73,7 @@ exec csi -s "$0" "$@"
                     (conc (or (modspec-ref m file:)
                               (module-name m))))))
 
+;; shortcut for (module-path ... ./file module)
 ;; (module-file target/ module/ '(coops file: coops-module-file dir: coops-module-dir))
 ;; (module-file target/ module/ .c .import '(cplusplus-object dir: bind))
 (define (module-file . procs-module)
@@ -119,6 +122,9 @@ exec csi -s "$0" "$@"
                                   (list (module-path target/ module/ m)
                                         (chicken-mobile-eggs)))
                                 (lambda (f search-paths) #f)))
+
+
+;; ================  end of path constructs
 
 (define (mk-module-body module-name . source-files)
   `("include $(CLEAR_VARS)"
