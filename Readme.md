@@ -1,4 +1,3 @@
-
 # chicken-mobile
 
 A lightweight script to aid building chicken eggs and modules. In a very early development stage!
@@ -7,7 +6,7 @@ A lightweight script to aid building chicken eggs and modules. In a very early d
 
 ```bash
 $ git clone <this repo>
-$ ln -s <this repo>/chicken-mobile.scm ~/bin/chicken-mobile
+$ ln -s $PWD/<this repo>/chicken-mobile.scm ~/bin/chicken-mobile
 ```
 
 ## Trying it out
