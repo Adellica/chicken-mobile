@@ -163,7 +163,7 @@ exec csi -s "$0" "$@"
 (define (module-compile-args module)
   ;; always module-name.c (easier makefile gen)
   (let ([source.scm (module-file search/ module/ .scm module)]
-        [target.c   (module-path target/ module/ .c ./name module)])
+        [target.c   (module-path .c ./name module)])
     `(-J
       -t ,source.scm
       -o ,target.c
@@ -179,8 +179,7 @@ exec csi -s "$0" "$@"
 (define (csc-thunk module arglist)
   (lambda ()
     (create-directory (module-path target/ module/ module) #t)
-    (print  "; csc " arglist)
-    (compile ,@arglist)))
+    (run (cd ,(module-path target/ module/ module) |\;| csc ,@arglist))))
 
 (make-print-reasons #t)
 ;; compile all scm files into .c files
