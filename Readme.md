@@ -24,6 +24,6 @@ $ find .
 
 * Make Chicken.mk work with the target build-dir
 * Don't hardcode included modules! (duh)
-** Read them from a nice project.scm instead
+ * Read them from a nice project.scm instead
 * Allow building non-module compilation units (non-eggs in current-project)
 * Add plugin-features to allow compiling non-trivial modules, like chickmunk and cocoscheme
