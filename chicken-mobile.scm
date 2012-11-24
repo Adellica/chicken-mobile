@@ -13,7 +13,7 @@ exec csi -s "$0" "$@"
                   matchable
                   record-variants))
 
-(use setup-api setup-helper-mod posix)
+(use setup-api setup-helper-mod posix make)
 
 ;; conventions from setup-api
 (define (c-source-filename file)
@@ -159,14 +159,67 @@ exec csi -s "$0" "$@"
             "\n"))))
 (print "done.")
 
+;; (module-compile-args '(coops file: coops-module))
+(define (module-compile-args module)
+  ;; always module-name.c (easier makefile gen)
+  (let ([source.scm (module-file search/ module/ .scm module)]
+        [target.c   (module-path target/ module/ .c ./name module)])
+    `(-J
+      -t ,source.scm
+      -o ,target.c
+      ;; most eggs include files from their own directory:
+      -include-path ,(pathname-directory source.scm))))
+
+(define (module-compile-args/import module)
+  `(""
+    -t ,(module-path .scm .import ./name module)
+    -o ,(module-path .c   .import ./name module)
+    ))
+
+(define (csc-thunk module arglist)
+  (lambda ()
+    (create-directory (module-path target/ module/ module) #t)
+    (print  "; csc " arglist)
+    (compile ,@arglist)))
+
+(make-print-reasons #t)
+;; compile all scm files into .c files
+(make/proc
+ (append
+  ;; compile to .c files
+  (map
+   (lambda (module)
+     `(  ,(module-path target/ module/ .c ./name module)     ;; build target
+         (,(module-file search/ module/ .scm module)) ;; dependencies
+         ,(csc-thunk module (module-compile-args module)))) ;; how-to-build target
+   modules)
+
+  ;; compile to import.c files
+  (map
+   (lambda (module)
+     `(   ,(module-path .c .import ./name module)
+          (,(module-path .scm .import ./name module)
+           ,(module-path target/ module/ .c ./name module))
+          ,(csc-thunk module (module-compile-args/import module))))
+   modules)
+
+  ;; make all import.scm files depend on .c files so they get
+  ;; recompiled too
+  (map
+   (lambda (module)
+     `(   ,(module-path .scm .import ./name module)
+          (,(module-path target/ module/ .c ./name module))))
+   modules)
 
 
-;; (make-print-reasons #t)
-;; (make/proc `(("liba" ("/tmp") ,(lambda () (print "---- ran liba")))
-;;              ("main" ("liba") ,(lambda () (print "---- ran main"))))
-;;            "main")
+  ;; build-targets for module-names, depends on respective target-c-filename
+  (map (lambda (m)
+         `(,(conc (module-name m))
+           (,(module-path target/ module/ .c ./name m)
+            ,(module-path .c .import ./name m))) )
+       modules)
 
-;; (pp (mk-module 'cplusplus-object))
-
+  `(("modules" ,(map (o conc module-name) modules))))
+ "modules")
 
 
