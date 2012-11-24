@@ -58,20 +58,26 @@ exec csi -s "$0" "$@"
           s
           (loop (cdr procs) ((car procs) module s))))))
 
+;; (module-path target/ module/ 'bind)
+;; (module-file 'bind)
+(define (module-path . procs-module)
+  (apply construct-path (cons "" procs-module)))
+
+;; (./file 'bind "dir")
+;; (./file '(coops file: coops-module) "dir")
+(define (./file m s)
+  (make-pathname s (module-file
+                    ;; get module filename/default
+                    (conc (or (modspec-ref m file:)
+                              (module-name m))))))
+
 ;; (module-file target/ module/ '(coops file: coops-module-file dir: coops-module-dir))
 ;; (module-file target/ module/ .c .import '(cplusplus-object dir: bind))
 (define (module-file . procs-module)
   (let ([module (last procs-module)])
     (apply construct-path (cons
-                           ;; get module filename/default
-                           (conc (or (modspec-ref module file:)
-                                     (module-name module)))
+                           (./file module "")
                            procs-module))))
-
-;; (module-path target/ module/ 'bind)
-;; (module-file 'bind)
-(define (module-path . procs-module)
-  (apply construct-path (cons "" procs-module)))
 
 (define (.scm module s)
   (source-filename s))
