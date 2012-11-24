@@ -47,13 +47,6 @@ exec csi -s "$0" "$@"
 (define (module-name module)
   (if (list? module) (car module) module))
 
-;; return source/target file of module
-;; always a string
-(define (module-file module)
-  (conc (or (modspec-ref module file:)
-            (module-name module))))
-
-
 ;; (module-dir '(cplusplus-object dir: bind))
 ;; (module-dir '(cplusplus-object file: trick))
 ;; (module-dir 'cplusplus-object)
@@ -72,15 +65,19 @@ exec csi -s "$0" "$@"
           s
           (loop (cdr procs) ((car procs) module s))))))
 
-;; (file target/ module/ '(coops file: coops-module-file dir: coops-module-dir))
-;; (file target/ module/ .c .import '(cplusplus-object dir: bind))
-(define (file . procs-module)
+;; (module-file target/ module/ '(coops file: coops-module-file dir: coops-module-dir))
+;; (module-file target/ module/ .c .import '(cplusplus-object dir: bind))
+(define (module-file . procs-module)
   (let ([module (last procs-module)])
-    (apply construct-path (cons (module-file module) procs-module))))
+    (apply construct-path (cons
+                           ;; get module filename/default
+                           (conc (or (modspec-ref module file:)
+                                     (module-name module)))
+                           procs-module))))
 
-;; (dir target/ module/ 'bind)
-;; (file 'bind)
-(define (dir . procs-module)
+;; (module-dir target/ module/ 'bind)
+;; (module-file 'bind)
+(define (module-dir . procs-module)
   (apply construct-path (cons "" procs-module)))
 
 (define (.scm module s)
@@ -101,7 +98,7 @@ exec csi -s "$0" "$@"
 (define (../ m s)
   (make-pathname "../" s))
 
-;; (file (make-searcher/ (lambda (m s) '("a" "b" "c")) (lambda (f search-paths) 'gone!)) 'bind)
+;; (module-file (make-searcher/ (lambda (m s) '("a" "b" "c")) (lambda (f search-paths) 'gone!)) 'bind)
 (define (make-searcher/ proc-search-paths
                         proc-not-found
                         #!optional (tried
@@ -119,7 +116,7 @@ exec csi -s "$0" "$@"
 
 ;; (search/ '(cplusplus-object dir: bind) "missing-file")
 (define search/ (make-searcher/ (lambda (m s)
-                                  (list (dir target/ module/ m)
+                                  (list (module-dir target/ module/ m)
                                         (chicken-mobile-eggs)))
                                 (lambda (f search-paths) #f)))
 
@@ -138,9 +135,9 @@ exec csi -s "$0" "$@"
   (let ([module (module-name module)])
     `(,(conc"# -------------------- " module)
       "# (shared library)"
-      ,(mk-module-body (module-name module) (file .c module))
+      ,(mk-module-body (module-name module) (module-file .c module))
       "# (shared import library) "
-      ,(mk-module-body (module-name module) (file .c .import module))
+      ,(mk-module-body (module-name module) (module-file .c .import module))
       "")))
 
 (print* "writing Chickem.mk ... ")
