@@ -95,11 +95,12 @@ exec csi -s "$0" "$@"
   (make-pathname (conc (or (modspec-ref m dir:) (module-name m)))
                  s))
 
+(define (./name m s)
+  (make-pathname s (conc (module-name m))))
+
 (define (target/ m s)
   (make-pathname ".chicken-mobile/build/" s))
 
-(define (../ m s)
-  (make-pathname "../" s))
 
 ;; (module-file (make-searcher/ (lambda (m s) '("a" "b" "c")) (lambda (f search-paths) 'gone!)) 'bind)
 (define (make-searcher/ proc-search-paths
