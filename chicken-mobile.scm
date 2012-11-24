@@ -107,18 +107,19 @@ exec csi -s "$0" "$@"
                         proc-not-found
                         #!optional (tried
                                     (lambda (s p) (print "; not found: " p))))
-  (lambda (m s) 
+  (lambda (m s)
     (let* ([sp (proc-search-paths m s)]
            [found
-            (find (lambda (search-path)
-                    (let ([pathname (make-pathname search-path s)])
-                      (if (file-exists? pathname)
-                          #t
-                          (begin (tried s pathname) #f))))
-                  sp)])
+            (find (lambda (pathname)
+                    (if (file-exists? pathname)
+                        #t
+                        (begin (tried s pathname) #f)))
+                  (map (cut make-pathname <> s)
+                       sp))])
       (or found (proc-not-found s sp)))))
 
 ;; (search/ '(cplusplus-object dir: bind) "missing-file")
+;; (module-file search/ module/ .scm 'coops)
 (define search/ (make-searcher/ (lambda (m s)
                                   (list (module-path target/ module/ m)
                                         (chicken-mobile-eggs)))
