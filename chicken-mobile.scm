@@ -97,6 +97,16 @@ exec csi -s "$0" "$@"
 (define (target/ m s)
   (make-pathname ".chicken-mobile/build/" s))
 
+;; (source/ '(cplusplus-object dir: bind) "")
+(define (source/ m s)
+  (find (lambda (x) (if (file-exists? x) #t (begin (print "; not found: " x) #f)))
+        (map (lambda (dir)
+               (make-pathname dir (file module/ .scm m)))
+             ;; list of directories to search for module:
+             (list (dir m)
+                   (make-pathname (chicken-mobile-home) "eggs")))))
+
+
 
 (define (mk-module-body module-name . source-files)
   `("include $(CLEAR_VARS)"
