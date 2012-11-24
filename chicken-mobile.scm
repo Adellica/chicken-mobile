@@ -123,7 +123,7 @@ exec csi -s "$0" "$@"
     "include $(BUILD_SHARED_LIBRARY)"))
 
 ;; obs: assuming module name always = module.c file (from compile
-;; step) -----
+;; step) ----- module-name.c
 ;;; (print (string-join (flatten (map mk-module modules)) "\n"))
 (define (mk-module module)
   (let ([module (module-name module)])
