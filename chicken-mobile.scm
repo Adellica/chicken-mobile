@@ -59,6 +59,19 @@ exec csi -s "$0" "$@"
 (define (module-dir module)
   (conc (or (modspec-ref module dir:) (module-name module))))
 
+
+;; construct pathname with a list of procs
+;; (file target/ dir/ '(coops file: coops-module-file dir: coops-module-dir))
+;; (file target/ dir/ .c .import '(cplusplus-object dir: bind))
+(define (file . procs-module)
+  (let ([module (last procs-module)])
+    (assert (or (and (list? module) (symbol? (car module))) (symbol? module)))
+    (let loop ([procs (reverse (drop-right procs-module 1))]
+               [s (module-file module)])
+      (if (null? procs)
+          s
+          (loop (cdr procs) ((car procs) module s))))))
+
 (define (.scm module s)
   (source-filename s))
 
@@ -74,16 +87,6 @@ exec csi -s "$0" "$@"
 (define (target/ m s)
   (make-pathname ".chicken-mobile/build/" s))
 
-;; (p target/ dir/ '(coops file: coops-module-file dir: coops-module-dir))
-;; (p target/ dir/ .c .import '(cplusplus-object dir: bind))
-(define (p . procs-module)
-  (let ([module (last procs-module)])
-    (assert (or (and (list? module) (symbol? (car module))) (symbol? module)))
-    (let loop ([procs (reverse (drop-right procs-module 1))]
-               [s (module-file module)])
-      (if (null? procs)
-          s
-          (loop (cdr procs) ((car procs) module s))))))
 
 (define (mk-module-body module-name . source-files)
   `("include $(CLEAR_VARS)"
@@ -100,9 +103,9 @@ exec csi -s "$0" "$@"
   (let ([module (module-name module)])
     `(,(conc"# -------------------- " module)
       "# (shared library)"
-      ,(mk-module-body (module-name module) (p .c module))
+      ,(mk-module-body (module-name module) (file .c module))
       "# (shared import library) "
-      ,(mk-module-body (module-name module) (p .c .import module))
+      ,(mk-module-body (module-name module) (file .c .import module))
       "")))
 
 
