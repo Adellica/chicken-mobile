@@ -47,13 +47,6 @@ exec csi -s "$0" "$@"
 (define (module-name module)
   (if (list? module) (car module) module))
 
-;; (module-dir '(cplusplus-object dir: bind))
-;; (module-dir '(cplusplus-object file: trick))
-;; (module-dir 'cplusplus-object)
-(define (module-dir module)
-  (conc (or (modspec-ref module dir:) (module-name module))))
-
-
 ;; construct pathname with a list of procs
 ;; (construct-path "xXx" target/ module/ '(coops file: coops-module))
 (define (construct-path initial-path . procs-module)
@@ -90,7 +83,8 @@ exec csi -s "$0" "$@"
   (import-filename s))
 
 (define (module/ m s)
-  (make-pathname (module-dir m) s))
+  (make-pathname (conc (or (modspec-ref m dir:) (module-name m)))
+                 s))
 
 (define (target/ m s)
   (make-pathname ".chicken-mobile/build/" s))
