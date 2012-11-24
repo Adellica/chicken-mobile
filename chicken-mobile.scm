@@ -61,16 +61,26 @@ exec csi -s "$0" "$@"
 
 
 ;; construct pathname with a list of procs
-;; (file target/ dir/ '(coops file: coops-module-file dir: coops-module-dir))
-;; (file target/ dir/ .c .import '(cplusplus-object dir: bind))
-(define (file . procs-module)
+;; (construct-path "xXx" target/ module/ '(coops file: coops-module))
+(define (construct-path initial-path . procs-module)
   (let ([module (last procs-module)])
     (assert (or (and (list? module) (symbol? (car module))) (symbol? module)))
     (let loop ([procs (reverse (drop-right procs-module 1))]
-               [s (module-file module)])
+               [s initial-path])
       (if (null? procs)
           s
           (loop (cdr procs) ((car procs) module s))))))
+
+;; (file target/ module/ '(coops file: coops-module-file dir: coops-module-dir))
+;; (file target/ module/ .c .import '(cplusplus-object dir: bind))
+(define (file . procs-module)
+  (let ([module (last procs-module)])
+    (apply construct-path (cons (module-file module) procs-module))))
+
+;; (dir target/ module/ 'bind)
+;; (file 'bind)
+(define (dir . procs-module)
+  (apply construct-path (cons "" procs-module)))
 
 (define (.scm module s)
   (source-filename s))
