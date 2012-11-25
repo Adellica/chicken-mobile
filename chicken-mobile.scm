@@ -53,7 +53,7 @@ exec csi -s "$0" "$@"
 ;; (construct-path "xXx" target/ module/ '(coops file: coops-module))
 (define (construct-path initial-path . procs-module)
   (let ([module (last procs-module)])
-    (assert (or (and (list? module) (symbol? (car module))) (symbol? module)))
+    (assert (or (and (list? module) (symbol? (car module))) (symbol? module)) "invalid module" module)
     (let loop ([procs (reverse (drop-right procs-module 1))]
                [s initial-path])
       (if (null? procs)
