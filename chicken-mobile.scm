@@ -180,7 +180,7 @@ exec csi -s "$0" "$@"
 (define (csc-thunk module arglist)
   (lambda ()
     (create-directory (module-path target/ module/ module) #t)
-    (run (cd ,(module-path target/ module/ module) |\;| csc ,@arglist))))
+    (run (cd ,(module-path target/ module/ module) ";" csc ,@arglist))))
 
 (make-print-reasons #t)
 ;; compile all scm files into .c files
