@@ -150,7 +150,7 @@ exec csi -s "$0" "$@"
 
 (define (write-chicken.mk)
   (print* "writing Chickem.mk ... ")
-  (with-output-to-file "Chicken.mk"
+  (with-output-to-file (target/ "Chicken.mk")
     (lambda ()
       (print (string-join
               (flatten
