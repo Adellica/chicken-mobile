@@ -58,16 +58,16 @@ exec csi -s "$0" "$@"
                [s initial-path])
       (if (null? procs)
           s
-          (loop (cdr procs) ((car procs) module s))))))
+          (loop (cdr procs) ((car procs) s module))))))
 
 ;; (module-path target/ module/ 'bind)
 ;; (module-file 'bind)
 (define (module-path . procs-module)
   (apply construct-path (cons "" procs-module)))
 
-;; (./file 'bind "dir")
-;; (./file '(coops file: coops-module) "dir")
-(define (./file m s)
+;; (./file "dir" 'bind)
+;; (./file "dir" '(coops file: coops-module))
+(define (./file s m)
   (make-pathname s
                  ;; get module filename/default
                  (conc (or (modspec-ref m file:)
@@ -79,26 +79,26 @@ exec csi -s "$0" "$@"
 (define (module-file . procs-module)
   (let ([module (last procs-module)])
     (apply construct-path (cons
-                           (./file module "")
+                           (./file "" module)
                            procs-module))))
 
-(define (.scm module s)
+(define (.scm s #!optional m)
   (source-filename s))
 
-(define (.c m s)
+(define (.c s #!optional m)
   (c-source-filename s))
 
-(define (.import m s)
+(define (.import s #!optional m)
   (import-filename s))
 
-(define (module/ m s)
+(define (module/ s m)
   (make-pathname (conc (or (modspec-ref m dir:) (module-name m)))
                  s))
 
-(define (./name m s)
+(define (./name s m)
   (make-pathname s (conc (module-name m))))
 
-(define (target/ m s)
+(define (target/ s #!optional m)
   (make-pathname ".chicken-mobile/build/" s))
 
 
@@ -107,8 +107,8 @@ exec csi -s "$0" "$@"
                         proc-not-found
                         #!optional (tried
                                     (lambda (s p) (print "; not found: " p))))
-  (lambda (m s)
-    (let* ([sp (proc-search-paths m s)]
+  (lambda (s m)
+    (let* ([sp (proc-search-paths s m)]
            [found
             (find (lambda (pathname)
                     (if (file-exists? pathname)
@@ -120,7 +120,7 @@ exec csi -s "$0" "$@"
 
 ;; (search/ '(cplusplus-object dir: bind) "missing-file")
 ;; (module-file search/ module/ .scm 'coops)
-(define search/ (make-searcher/ (lambda (m s)
+(define search/ (make-searcher/ (lambda (s m)
                                   (list (module-path target/ module/ m)
                                         (chicken-mobile-eggs)))
                                 (lambda (f search-paths) #f)))
