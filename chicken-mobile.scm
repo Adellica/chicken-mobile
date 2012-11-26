@@ -2,6 +2,10 @@
 #|
 exec csi -s "$0" "$@"
 |#
+(use setup-api setup-helper-mod posix make)
+
+(define chicken-mobile-eggs
+  (make-parameter "~/.chicken-mobile/eggs/"))
 
 
 ;; spec: list-of module-spec
@@ -13,15 +17,9 @@ exec csi -s "$0" "$@"
                   matchable
                   record-variants))
 
-(use setup-api setup-helper-mod posix make)
-
 ;; conventions from setup-api
 (define (c-source-filename file)
   (conc file ".c"))
-
-
-(define chicken-mobile-home (make-parameter "~/.chicken-mobile/"))
-(define chicken-mobile-eggs (make-parameter "~/.chicken-mobile/eggs/"))
 
 ;; (plist-ref '(key1: a key2: b) key2:)
 ;; (plist-ref '(key1: a key2: b) false:)
