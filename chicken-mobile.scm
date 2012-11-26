@@ -126,10 +126,11 @@ exec csi -s "$0" "$@"
 
 ;; ================  end of path constructs
 
-(define (mk-module-body android-module-name . source-files)
+(define (mk-module-body module-name module-dir module-source)
   `("include $(CLEAR_VARS)"
-    ,(conc "LOCAL_MODULE := " android-module-name)
-    ,(apply conc (cons "LOCAL_SRC_FILES := " source-files))
+    ,(conc "LOCAL_MODULE := " module-name)
+    ,(conc "LOCAL_PATH := " module-dir)
+    ,(conc "LOCAL_SRC_FILES := " module-source)
     "LOCAL_SHARED_LIBRARIES := chicken"
     "LOCAL_CFLAGS := -DC_SHARED"
     "include $(BUILD_SHARED_LIBRARY)"))
@@ -137,14 +138,18 @@ exec csi -s "$0" "$@"
 ;; obs: assuming module name always = module.c file (from compile
 ;; step) ----- module-name.c
 ;;; (print (string-join (flatten (map mk-module modules)) "\n"))
+;;; (pp (mk-module 'bind))
 (define (mk-module module)
-  (let ([module (module-name module)])
-    `(,(conc"# -------------------- " module)
-      "# (shared library)"
-      ,(mk-module-body (module-name module) (module-file .c module))
-      "# (shared import library) "
-      ,(mk-module-body (.import (module-name module)) (module-file .c .import module))
-      "")))
+  `(,(conc"# -------------------- " module)
+    "# (shared library)"
+    ,(mk-module-body (module-name module)
+                     (module-path target/ module/ module)
+                     (module-path .c ./name module))
+    "# (shared import library) "
+    ,(mk-module-body (.import (module-name module))
+                     (module-path target/ module/ module)
+                     (module-path .c .import ./name module))
+    ""))
 
 (define (write-chicken.mk)
   (print* "writing Chickem.mk ... ")
