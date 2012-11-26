@@ -128,9 +128,9 @@ exec csi -s "$0" "$@"
 
 ;; ================  end of path constructs
 
-(define (mk-module-body module-name . source-files)
+(define (mk-module-body android-module-name . source-files)
   `("include $(CLEAR_VARS)"
-    ,(conc "LOCAL_MODULE := " module-name)
+    ,(conc "LOCAL_MODULE := " android-module-name)
     ,(apply conc (cons "LOCAL_SRC_FILES := " source-files))
     "LOCAL_SHARED_LIBRARIES := chicken"
     "LOCAL_CFLAGS := -DC_SHARED"
@@ -145,7 +145,7 @@ exec csi -s "$0" "$@"
       "# (shared library)"
       ,(mk-module-body (module-name module) (module-file .c module))
       "# (shared import library) "
-      ,(mk-module-body (module-name module) (module-file .c .import module))
+      ,(mk-module-body (.import (module-name module)) (module-file .c .import module))
       "")))
 
 (define (write-chicken.mk)
