@@ -189,17 +189,17 @@ exec csi -s "$0" "$@"
   ;; compile to .c files
   (map
    (lambda (module)
-     `(  ,(module-path target/ module/ .c ./name module) ;; build target
-         (,(module-file search/ module/ .scm module)) ;; dependencies
+     `(  ,(module-path  target/ module/ .c   ./name module) ;; build target
+         (,(module-path search/ module/ .scm ./file module)) ;; dependencies
          ,(csc-thunk module (module-compile-args module)))) ;; how-to-build target
    modules)
 
   ;; compile to import.c files
   (map
    (lambda (module)
-     `(   ,(module-path .c .import ./name module)
-          (,(module-path .scm .import ./name module)
-           ,(module-path target/ module/ .c ./name module))
+     `(   ,(module-path  target/ module/ .c   .import ./name module)
+          (,(module-path target/ module/ .scm .import ./name module)
+           ,(module-path target/ module/ .c           ./name module))
           ,(csc-thunk module (module-compile-args/import module))))
    modules)
 
@@ -207,16 +207,16 @@ exec csi -s "$0" "$@"
   ;; recompiled too
   (map
    (lambda (module)
-     `(   ,(module-path .scm .import ./name module)
-          (,(module-path target/ module/ .c ./name module))))
+     `(   ,(module-path  target/ module/ .scm .import ./name module)
+          (,(module-path target/ module/ .c           ./name module))))
    modules)
 
 
   ;; build-targets for module-names, depends on respective target-c-filename
   (map (lambda (m)
          `(,(conc (module-name m))
-           (,(module-path target/ module/ .c ./name m)
-            ,(module-path .c .import ./name m))) )
+           (,(module-path target/ module/ .c         ./name m)
+            ,(module-path target/ module/ .c .import ./name m))) )
        modules)
 
   `(("write-chicken.mk" () ,write-chicken.mk))
