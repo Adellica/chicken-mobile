@@ -112,6 +112,8 @@ exec csi -s "$0" "$@"
 (define (target/ s #!optional m)
   (make-pathname ".chicken-mobile/build/" s))
 
+(define (chicken-mobile/ s #!optional m)
+  (make-pathname (chicken-mobile-home) s))
 
 ;; (module-file (make-searcher/ (lambda (m s) '("a" "b" "c")) (lambda (f search-paths) 'gone!)) 'bind)
 (define (make-searcher/ proc-search-paths
@@ -175,8 +177,7 @@ exec csi -s "$0" "$@"
                  ""
                  ,@(map mk-module modules)
                  ""
-                 ,(conc "$(call import-add-path,"
-                        (make-pathname (chicken-mobile-home) "android/modules-prebuilt") ")" )
+                 ,(conc "$(call import-add-path," (chicken-mobile/ "android/modules-prebuilt") ")" )
                  ,(conc "$(call import-module,chicken)")
                  ))
               "\n"))))
