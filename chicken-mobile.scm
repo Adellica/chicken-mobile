@@ -1,7 +1,3 @@
-#!/bin/sh
-#|
-exec csi -s "$0" "$@"
-|#
 (use setup-api setup-helper-mod posix make)
 
 ;; find the directory where this program is run from,

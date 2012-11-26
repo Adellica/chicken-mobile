@@ -1,0 +1,5 @@
+#!/bin/sh
+# try to find chicken-mobile.scm, even if $0 is symbol link with relative dir
+
+exec csi -s "`dirname $0`/`readlink $0`.scm" "$@"
+
