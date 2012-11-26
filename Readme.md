@@ -1,6 +1,8 @@
 # chicken-mobile
 
-A lightweight script to aid building chicken eggs and modules. In a very early development stage!
+A lightweight script to aid building chicken eggs and modules. In a very early development stage! 
+See the `android` directory for a set of Chicken NDK modules that you can
+[import](http://www.kandroid.org/ndk/docs/IMPORT-MODULE.html) into your project.
 
 ## One way to “install”
 
