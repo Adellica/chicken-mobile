@@ -1,3 +1,12 @@
+# This project is no longer active
+
+You may want to check out this [alternative approach](https://github.com/chicken-mobile/android-chicken)
+to build Chicken Scheme projects for Android. It utilizes Chicken Scheme's to cross-compile, and the NDK's ability to
+produce a stand-alone cross-compiler for a particular platform.
+
+This project takes on a different approach: it produces NDK makefiles. It is currently not maintained, but is left here
+for reference.
+
 # chicken-mobile
 
 A lightweight script to aid building chicken eggs and modules. In a very early development stage! 
